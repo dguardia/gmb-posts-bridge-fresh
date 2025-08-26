@@ -51,13 +51,10 @@ class GMBPostsBridge {
             return;
         }
         
-        // Enqueue Tailwind CSS from CDN
-        wp_enqueue_style(
-            'tailwindcss',
-            'https://cdn.tailwindcss.com',
-            array(),
-            GMB_POSTS_BRIDGE_VERSION
-        );
+        // Add Tailwind CSS via script tag in head
+        add_action('admin_head', function() {
+            echo '<script src="https://cdn.tailwindcss.com"></script>';
+        });
         
         // Enqueue custom admin styles
         wp_enqueue_style(

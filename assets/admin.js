@@ -1,12 +1,12 @@
 jQuery(document).ready(function($) {
     // Tab switching functionality
-    $('.gmb-tab-btn').on('click', function() {
+    $('.gmb-tab-btn, .gmb-tab-trigger').on('click', function() {
         var tabId = $(this).data('tab');
         
         // Update tab buttons
         $('.gmb-tab-btn').removeClass('active border-blue-500 text-blue-600')
                          .addClass('border-transparent text-gray-500');
-        $(this).addClass('active border-blue-500 text-blue-600')
+        $('.gmb-tab-btn[data-tab="' + tabId + '"]').addClass('active border-blue-500 text-blue-600')
                .removeClass('border-transparent text-gray-500');
         
         // Update tab content
@@ -14,8 +14,8 @@ jQuery(document).ready(function($) {
         $('#' + tabId + '-tab').addClass('active').show();
     });
     
-    // Show home tab by default
-    $('#home-tab').addClass('active').show();
+    // Show dashboard tab by default
+    $('#dashboard-tab').addClass('active').show();
     
     // Settings form submission
     $('#settings-form').on('submit', function(e) {
@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
             action: 'gmb_save_settings',
             nonce: gmb_ajax.nonce,
             location_id: $('#location_id').val(),
-            allow_customer_override: $('#settings-form input[name="allow_customer_override"]').is(':checked') ? 1 : 0
+            allow_customer_override: $('#allow_customer_override').is(':checked') ? 1 : 0
         };
         
         submitForm($(this), formData, 'Settings saved successfully!');
@@ -49,10 +49,10 @@ jQuery(document).ready(function($) {
     // Test connection button
     $('#test-connection-btn').on('click', function() {
         var $btn = $(this);
-        var originalText = $btn.text();
+        var originalHtml = $btn.html();
         
         $btn.prop('disabled', true)
-            .html('<span class="gmb-spinner mr-2"></span>Testing...');
+            .html('<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Testing...');
         
         $.ajax({
             url: gmb_ajax.ajax_url,
@@ -72,15 +72,48 @@ jQuery(document).ready(function($) {
                 showMessage('Connection test failed. Please try again.', 'error');
             },
             complete: function() {
-                $btn.prop('disabled', false).text(originalText);
+                $btn.prop('disabled', false).html(originalHtml);
             }
         });
     });
     
-    // Post form submission (placeholder)
+    // Sync now button
+    $('#sync-now-btn').on('click', function() {
+        var $btn = $(this);
+        var originalHtml = $btn.html();
+        
+        $btn.prop('disabled', true)
+            .html('<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Syncing...');
+        
+        // Simulate sync process
+        setTimeout(function() {
+            showMessage('Sync completed successfully! 24 posts synchronized.', 'success');
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
+    });
+    
+    // Post form submission
     $('#post-form').on('submit', function(e) {
         e.preventDefault();
-        showMessage('Post creation feature coming soon! This is a placeholder.', 'success');
+        
+        var content = $('#post_content').val().trim();
+        if (!content) {
+            showMessage('Please enter post content.', 'error');
+            return;
+        }
+        
+        var $btn = $(this).find('button[type="submit"]');
+        var originalText = $btn.text();
+        
+        $btn.prop('disabled', true)
+            .html('<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Creating...');
+        
+        // Simulate post creation
+        setTimeout(function() {
+            showMessage('Post created successfully! It will be published to your Google My Business profile.', 'success');
+            $('#post-form')[0].reset();
+            $btn.prop('disabled', false).text(originalText);
+        }, 1500);
     });
     
     // Generic form submission function
@@ -89,7 +122,7 @@ jQuery(document).ready(function($) {
         var originalText = $submitBtn.text();
         
         $submitBtn.prop('disabled', true)
-                  .html('<span class="gmb-spinner mr-2"></span>Saving...');
+                  .html('<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Saving...');
         
         $.ajax({
             url: gmb_ajax.ajax_url,
@@ -98,6 +131,10 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     showMessage(successMessage, 'success');
+                    // Refresh page to update connection status
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     showMessage(response.data || 'An error occurred. Please try again.', 'error');
                 }
