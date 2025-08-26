@@ -1,0 +1,86 @@
+/* Custom styles for GMB Posts Bridge Admin */
+.gmb-tab-content {
+    display: none;
+}
+
+.gmb-tab-content.active {
+    display: block;
+}
+
+.gmb-tab-btn.active {
+    color: #2563eb;
+    border-color: #2563eb;
+}
+
+.gmb-tab-btn:not(.active) {
+    color: #6b7280;
+    border-color: transparent;
+}
+
+.gmb-tab-btn:not(.active):hover {
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+/* Message animations */
+.gmb-message-show {
+    transform: translateX(0) !important;
+}
+
+.gmb-message-success {
+    border-left: 4px solid #10b981;
+}
+
+.gmb-message-error {
+    border-left: 4px solid #ef4444;
+}
+
+/* Loading states */
+.gmb-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.gmb-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f4f6;
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Form enhancements */
+.form-table th {
+    padding-left: 0;
+}
+
+.form-table td {
+    padding-left: 0;
+}
+
+/* WordPress admin compatibility */
+.wrap h1 {
+    margin: 0 0 1rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .max-w-6xl {
+        margin: 0 1rem;
+    }
+    
+    .px-6 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .grid-cols-1.md\:grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+}
